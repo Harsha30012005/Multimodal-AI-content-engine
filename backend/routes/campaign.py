@@ -21,6 +21,10 @@ def get_task_status(task_id: str):
     elif task.state == "SUCCESS":
         return {"task_id": task_id, "status": "completed", "result": task.result}
     elif task.state == "FAILURE":
-        return {"task_id": task_id, "status": "failed"}
+        return {
+            "task_id": task_id, 
+            "status": "failed",
+            "error": str(task.result)
+        }
     else:
-        return {"task_id": task_id, "status": "processing"}
+        return {"task_id": task_id, "status": task.state}
