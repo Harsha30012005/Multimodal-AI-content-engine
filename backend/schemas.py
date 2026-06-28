@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import List
+from typing import List, Optional
 
 class CampaignRequest(BaseModel):
     campaign_brief: str
@@ -18,12 +18,7 @@ class SEOMetadata(BaseModel):
     meta_description: str
     keywords: List[str]
 
-class CampaignResult(BaseModel):
-    blog_post: BlogPost
-    social_media: SocialMedia
-    seo_metadata: SEOMetadata
-
 class TaskResponse(BaseModel):
     task_id: str
     status: str
-    result: dict = None
+    result: Optional[dict] = None

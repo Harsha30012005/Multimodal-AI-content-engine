@@ -4,7 +4,7 @@ from tasks import generate_campaign_task
 
 router = APIRouter()
 
-@router.post("/generate", response_model=TaskResponse)
+@router.post("/generate")
 def generate_campaign(request: CampaignRequest):
     task = generate_campaign_task.delay(
         request.campaign_brief,
@@ -17,7 +17,7 @@ def generate_campaign(request: CampaignRequest):
         "result": None
     }
 
-@router.get("/tasks/{task_id}", response_model=TaskResponse)
+@router.get("/tasks/{task_id}")
 def get_task_status(task_id: str):
     task = generate_campaign_task.AsyncResult(task_id)
 
