@@ -1,5 +1,6 @@
 fastapi
 uvicorn
-celery==5.2.7
-redis==4.3.4
+celery==5.3.4
+redis==4.6.0
 python-dotenv
+openai
