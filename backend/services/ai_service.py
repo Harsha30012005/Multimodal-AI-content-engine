@@ -1,4 +1,4 @@
-from openai import OpenAI
+import anthropic
 import os
 import json
 from dotenv import load_dotenv
@@ -7,7 +7,7 @@ import logging
 load_dotenv()
 
 logger = logging.getLogger(__name__)
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+client = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
 
 def generate_campaign_content(campaign_brief: str, tone: str, target_audience: str) -> dict:
     logger.info(f"Generating content for: {campaign_brief}")
@@ -29,7 +29,7 @@ def generate_campaign_content(campaign_brief: str, tone: str, target_audience: s
         "social_media": {{
             "twitter_variants": [
                 "tweet 1 under 280 chars",
-                "tweet 2 under 280 chars", 
+                "tweet 2 under 280 chars",
                 "tweet 3 under 280 chars"
             ]
         }},
@@ -41,19 +41,15 @@ def generate_campaign_content(campaign_brief: str, tone: str, target_audience: s
     }}
     """
     
-    response = client.chat.completions.create(
-        model="gpt-3.5-turbo",
+    response = client.messages.create(
+        model="claude-sonnet-4-6",
+        max_tokens=1500,
         messages=[
-            {"role": "system", "content": "You are a professional marketing copywriter. Always respond with valid JSON only."},
             {"role": "user", "content": prompt}
-        ],
-        temperature=0.7,
-        max_tokens=1500
+        ]
     )
     
-    content = response.choices[0].message.content
-    
-    # Clean any markdown code blocks if present
+    content = response.content[0].text
     content = content.replace("```json", "").replace("```", "").strip()
     
     result = json.loads(content)
