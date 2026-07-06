@@ -5,3 +5,5 @@ redis==4.6.0
 python-dotenv
 anthropic
 requests
+pytest
+httpx
