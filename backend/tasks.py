@@ -9,6 +9,7 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 from services.ai_service import generate_campaign_content
 from services.image_service import generate_campaign_images
+from services.validator_service import validate_and_clean_result
 
 logger = logging.getLogger(__name__)
 
@@ -27,12 +28,20 @@ def generate_campaign_task(self, campaign_brief: str, tone: str = "professional"
 
         text_result["images"] = images_result
 
+        # Validate and clean schema
+        validated_result = validate_and_clean_result(text_result)
+
         elapsed = round(time.time() - start_time, 2)
-        logger.info(f"Task completed in {elapsed}s using parallel execution!")
+        logger.info(f"Task completed in {elapsed}s with schema validation!")
 
-        text_result["_meta"] = {"execution_time_seconds": elapsed, "mode": "parallel"}
+        validated_result["_meta"] = {
+            "execution_time_seconds": elapsed,
+            "mode": "parallel",
+            "schema_validated": True
+        }
 
-        return text_result
+        return validated_result
+
     except Exception as e:
         logger.error(f"Task failed: {str(e)}")
         raise self.retry(exc=e, countdown=3, max_retries=2)
