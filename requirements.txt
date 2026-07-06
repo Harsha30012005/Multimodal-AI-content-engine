@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+celery==5.3.4
+redis==4.6.0
+python-dotenv
+anthropic
+requests
+pytest
+httpx
